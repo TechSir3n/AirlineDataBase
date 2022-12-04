@@ -21,6 +21,8 @@ public:
 
 	auto ConnectPassengers() -> void;
 
+	auto ChoiceUpdatePassengers()noexcept -> QString;
+
 public slots:
 	void InsertBaseDataPassengers();
 

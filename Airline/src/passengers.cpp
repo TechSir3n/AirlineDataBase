@@ -90,15 +90,52 @@ void Passengers::InsertBaseDataPassengers()
 	}
 }
 
+auto Passengers::ChoiceUpdatePassengers()noexcept -> QString
+{
+	const QString text = QInputDialog::getText(this, tr("Enter new code for update "),
+		tr("Enter:"), QLineEdit::Normal,
+		QDir::home().dirName());
+
+	return text;
+}
 
 void Passengers::UpdateBaseDataPassengers()
 {
+	const QString old_code = ChoiceUpdatePassengers();
+	const QString code_update = ui->LineCodePassenger->text();
+	const QString update = "UPDATE Passengfers SET=:code_update WHERE code=:old_code";
 
+	query->prepare(update);
+	query->bindValue(":code", old_code);
+	query->bindValue(":code_update", code_update);
+
+	if (!query->exec()) {
+		log.error(query->lastError().text());
+	}
+	else {
+		log.info(old_code + " Success update on -> " + code_update);
+
+	}
+
+	model->select();
 }
 
 void Passengers::DeleteBaseDataPassengers()
 {
+	const QString delete_code = ui->LineCodePassenger->text();
+	const QString delete_tb = "DELETE FROM Passengers WHERE code=:code";
 
+	query->prepare(delete_tb);
+	query->bindValue(":code", delete_code);
+
+	if (!query->exec()) {
+		log.error(query->lastError().text());
+	}
+	else {
+		log.info(delete_code + " Removed successfully ");
+	}
+
+	model->select();
 }
 
 void Passengers::CloseBaseDataPassengers()
