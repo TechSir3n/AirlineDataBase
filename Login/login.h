@@ -1,14 +1,13 @@
 #ifndef LOGIN_H
 #define LOGIN_H
 
-#include <QMainWindow>
-#include <QScopedPointer>
-#include <QMessageBox>
+
+#include "airlinedb.h"
 #include "storage.h"
 
-namespace Ui {
-class Login;
-}
+QT_BEGIN_NAMESPACE
+namespace Ui { class Login; }
+QT_END_NAMESPACE
 
 class Login : public QMainWindow
 {
@@ -19,18 +18,21 @@ public:
     ~Login();
 
 public slots:
-  auto DatabaseEntry() noexcept -> bool;
+  void DatabaseEntry() noexcept;
 
-  auto ChoiceViewPassword() noexcept -> void;
+  void ChoiceViewPassword() noexcept;
 
 public:
   auto CheckCorrectInput() noexcept -> bool;
 
 public:
-    static Login *getInstance()noexcept;
+   static Login *getInstance()noexcept;
 
 private:
     QScopedPointer<Storage> t_st;
+    AirlineDB t_db;
+
+private:
     Ui::Login *ui;
 };
 

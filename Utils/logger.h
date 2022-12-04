@@ -4,6 +4,7 @@
 #include <QString>
 #include <iostream>
 
+
 class Logger
 {
 public:

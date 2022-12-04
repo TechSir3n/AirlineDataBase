@@ -1,6 +1,7 @@
 #include "airlinedb.h"
 #include "ui_airlinedb.h"
 
+
 AirlineDB::AirlineDB(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::AirlineDB) {
   ui->setupUi(this);
@@ -44,7 +45,7 @@ auto AirlineDB::Connect() -> bool {
   }
 }
 
-auto AirlineDB::CreateTableBaseData() noexcept -> void {
+void  AirlineDB::CreateTableBaseData() noexcept{
   query = new QSqlQuery(db);
 
   QString table = "CREATE TABLE AirlineDB ("
@@ -94,7 +95,7 @@ auto AirlineDB::InsertDataTable() noexcept -> void {
   ClearLine();
 }
 
-auto AirlineDB::DeleteBaseData()noexcept -> void
+void AirlineDB::DeleteBaseData()noexcept
 {
    const QString name_del=ui->LineName->text();
    const QString delete_db="DELETE FROM AirlineDB WHERE name=:name";
@@ -118,14 +119,11 @@ auto AirlineDB::ChoiceUpdate()noexcept -> QString
                                         tr("Enter: "),QLineEdit::Normal,
                                         QDir::home().dirName(),&ok);
 
-   if(ok && !text.isEmpty()){
-       ui->label_5->setText(text);
-   }
-
    return text;
 }
 
-auto AirlineDB::UpdateBaseData()noexcept -> void
+
+void AirlineDB::UpdateBaseData()noexcept
 {
    const QString choice_update = ChoiceUpdate();
    const QString choice_name=ui->LineName->text();
@@ -139,13 +137,13 @@ auto AirlineDB::UpdateBaseData()noexcept -> void
     if(!query->exec()){
         log.error(query->lastError().text());
     }else{
-        log.info(choice_name + "update successfully on " + choice_update );
+        log.info(choice_name + " update successfully on " + choice_update );
     }
 
     model->select();
 }
 
-auto AirlineDB::CloseBaseData() noexcept -> void
+void AirlineDB::CloseBaseData() noexcept
 {
     db.close();
 }

@@ -37,13 +37,13 @@ public:
   static AirlineDB *getInstance()noexcept;
 
 public slots:
-  auto CloseBaseData() noexcept -> void;
+   void CloseBaseData() noexcept ;
 
-  auto InsertDataTable() noexcept -> void;
+   void  InsertDataTable() noexcept;
 
-  auto DeleteBaseData()noexcept -> void;
+   void DeleteBaseData()noexcept;
 
-  auto UpdateBaseData()noexcept -> void;
+   void UpdateBaseData()noexcept ;
 
 private:
   QSqlDatabase db;

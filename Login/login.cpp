@@ -1,6 +1,9 @@
 #include "login.h"
 #include "ui_login.h"
 
+#include <QMainWindow>
+#include <QScopedPointer>
+
 Login::Login(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Login)
@@ -8,30 +11,37 @@ Login::Login(QWidget *parent) :
     ui->setupUi(this);
 
     connect(ui->btnLogin, SIGNAL(clicked(bool)), this, SLOT(DatabaseEntry()));
-       connect(ui->btnPassword, SIGNAL(clicked(bool)), this,
-               SLOT(ChoiceViewPassword()));
-}
+    connect(ui->btnPassword, SIGNAL(clicked(bool)), this,
+            SLOT(ChoiceViewPassword()));
+
+    Storage *st=new Storage;
+
+    QObject::connect(ui->ActChangePassword,&QAction::triggered,st,&Storage::ChangePassword);
+    QObject::connect(ui->actionClose,SIGNAL(triggered(bool)),qApp,SLOT(quit()));
+
+ }
 
 Login::~Login()
 {
     delete ui;
 }
 
-auto Login::DatabaseEntry() noexcept -> bool {
+void Login::DatabaseEntry() noexcept {
   QString password = ui->LinePassword->text();
   QString login = ui->LineLogin->text();
 
   if (CheckCorrectInput()) {
       if(t_st->CorrectlyLogin(password,login)){
-            QMessageBox::information(this,"Is Valid","Login is true");
+        t_db.Connect();
+        t_db.show();
+      }else{
+         QMessageBox::information(this,"Failed","Wrong enter login");
       }
-  } else {
-    QMessageBox::warning(this, "Failed to login", "User enter wrong data");
-    return false;
   }
-
-  return true;
-}
+   else {
+    QMessageBox::warning(this, "Failed to login", "User enter wrong data");
+  }
+ }
 
 
 Login *Login::getInstance() noexcept
@@ -40,7 +50,7 @@ Login *Login::getInstance() noexcept
    return &instance;
 }
 
-auto Login::ChoiceViewPassword() noexcept -> void {
+void Login::ChoiceViewPassword() noexcept {
   if (ui->btnPassword->isChecked()) {
     ui->LinePassword->setEchoMode(QLineEdit::Normal);
   } else {
