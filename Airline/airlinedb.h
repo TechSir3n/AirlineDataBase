@@ -13,46 +13,46 @@
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class AirlineDB;
+	class AirlineDB;
 }
 QT_END_NAMESPACE
 
 class AirlineDB : public QMainWindow {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  AirlineDB(QWidget *parent = nullptr);
-  ~AirlineDB();
+	AirlineDB(QWidget* parent = nullptr);
+	~AirlineDB();
 
 public:
-  auto Connect() -> bool;
+	auto Connect() -> bool;
 
-  auto CreateTableBaseData() noexcept -> void;
+	auto CreateTableBaseData() noexcept -> void;
 
-  auto ChoiceUpdate()noexcept -> QString;
+	auto ChoiceUpdate()noexcept -> QString;
 
-  auto ClearLine()noexcept -> void;
+	auto ClearLine()noexcept -> void;
 
 public:
-  static AirlineDB *getInstance()noexcept;
+	static AirlineDB* getInstance()noexcept;
 
 public slots:
-   void CloseBaseData() noexcept ;
+	void CloseBaseData() noexcept;
 
-   void  InsertDataTable() noexcept;
+	void  InsertDataTable() noexcept;
 
-   void DeleteBaseData()noexcept;
+	void DeleteBaseData()noexcept;
 
-   void UpdateBaseData()noexcept ;
-
-private:
-  QSqlDatabase db;
-  QSqlTableModel *model;
-  QSqlQuery *query;
+	void UpdateBaseData()noexcept;
 
 private:
-  Ui::AirlineDB *ui;
-  Logger log;
+	QSqlDatabase db;
+	QSqlTableModel* model;
+	QSqlQuery* query;
+
+private:
+	Ui::AirlineDB* ui;
+	Logger log;
 };
 
 #endif // AIRLINEDB_H

@@ -9,27 +9,27 @@
 #include <QByteArray>
 #include <QDir>
 
-class Storage:public QObject
+class Storage :public QObject
 {
- Q_OBJECT
+	Q_OBJECT
 public:
-   Storage () = default ;
+	Storage() = default;
 
 public:
-     auto UserLogin() noexcept -> bool;
+	auto UserLogin() noexcept -> bool;
 
-     auto StoragePassword(const QString &password, const QString &login) noexcept
-          -> bool;
+	auto StoragePassword(const QString& password, const QString& login) noexcept
+		-> bool;
 
-     auto CorrectlyLogin(const QString &password, const QString &login) noexcept
-          -> bool;
+	auto CorrectlyLogin(const QString& password, const QString& login) noexcept
+		-> bool;
 
 public slots:
-     bool ChangePassword();
+	bool ChangePassword();
 
 private:
-     QWidget *wgt;
-     Logger log;
+	QWidget* wgt;
+	Logger log;
 };
 
 #endif // STORAGE_H

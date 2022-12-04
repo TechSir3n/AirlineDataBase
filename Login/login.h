@@ -1,7 +1,6 @@
 #ifndef LOGIN_H
 #define LOGIN_H
 
-
 #include "airlinedb.h"
 #include "storage.h"
 
@@ -11,29 +10,29 @@ QT_END_NAMESPACE
 
 class Login : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit Login(QWidget *parent = nullptr);
-    ~Login();
+	explicit Login(QWidget* parent = nullptr);
+	~Login();
 
 public slots:
-  void DatabaseEntry() noexcept;
+	void DatabaseEntry() noexcept;
 
-  void ChoiceViewPassword() noexcept;
-
-public:
-  auto CheckCorrectInput() noexcept -> bool;
+	void ChoiceViewPassword() noexcept;
 
 public:
-   static Login *getInstance()noexcept;
+	auto CheckCorrectInput() noexcept -> bool;
+
+public:
+	static Login* getInstance()noexcept;
 
 private:
-    QScopedPointer<Storage> t_st;
-    AirlineDB t_db;
+	QScopedPointer<Storage> t_st;
+	AirlineDB t_db;
 
 private:
-    Ui::Login *ui;
+	Ui::Login* ui;
 };
 
 #endif // LOGIN_H
