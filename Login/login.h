@@ -1,8 +1,10 @@
 #ifndef LOGIN_H
 #define LOGIN_H
 
+
 #include "airlinedb.h"
 #include "storage.h"
+#include "passengers.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Login; }
@@ -29,7 +31,11 @@ public:
 
 private:
 	QScopedPointer<Storage> t_st;
+	Storage* m_st;
+
+private:
 	AirlineDB t_db;
+	Passengers p_db;
 
 private:
 	Ui::Login* ui;

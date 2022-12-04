@@ -25,11 +25,11 @@ public:
 	~AirlineDB();
 
 public:
-	auto Connect() -> bool;
+	auto ConnectAirline() -> void;
 
-	auto CreateTableBaseData() noexcept -> void;
+	auto CreateTableBaseDataAirline() noexcept -> void;
 
-	auto ChoiceUpdate()noexcept -> QString;
+	auto ChoiceUpdateAirline()noexcept -> QString;
 
 	auto ClearLine()noexcept -> void;
 
@@ -37,13 +37,13 @@ public:
 	static AirlineDB* getInstance()noexcept;
 
 public slots:
-	void CloseBaseData() noexcept;
+	void CloseBaseDataAirline() noexcept;
 
-	void  InsertDataTable() noexcept;
+	void InsertDataTableAirline() noexcept;
 
-	void DeleteBaseData()noexcept;
+	void DeleteBaseDataAirline()noexcept;
 
-	void UpdateBaseData()noexcept;
+	void UpdateBaseDataAirline()noexcept;
 
 private:
 	QSqlDatabase db;

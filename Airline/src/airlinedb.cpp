@@ -6,10 +6,10 @@ AirlineDB::AirlineDB(QWidget* parent)
 	: QMainWindow(parent), ui(new Ui::AirlineDB) {
 	ui->setupUi(this);
 
-	connect(ui->btnAdd, SIGNAL(clicked(bool)), this, SLOT(InsertDataTable()));
-	connect(ui->btnClose, SIGNAL(clicked(bool)), this, SLOT(CloseBaseData()));
-	connect(ui->btnDelete, SIGNAL(clicked(bool)), this, SLOT(DeleteBaseData()));
-	connect(ui->btnUpdate, SIGNAL(clicked(bool)), this, SLOT(UpdateBaseData()));
+	QObject::connect(ui->btnAdd, SIGNAL(clicked(bool)), this, SLOT(InsertDataTableAirline()));
+	QObject::connect(ui->btnClose, SIGNAL(clicked(bool)), this, SLOT(CloseBaseDataAirline()));
+	QObject::connect(ui->btnDelete, SIGNAL(clicked(bool)), this, SLOT(DeleteBaseDataAirline()));
+	QObject::connect(ui->btnUpdate, SIGNAL(clicked(bool)), this, SLOT(UpdateBaseDataAirline()));
 }
 
 AirlineDB::~AirlineDB()
@@ -27,29 +27,28 @@ auto AirlineDB::ClearLine()noexcept -> void
 	ui->LineTelephone->clear();
 }
 
-auto AirlineDB::Connect() -> bool {
+auto AirlineDB::ConnectAirline() -> void {
 	const QString path = "./Airline.db";
 	db = QSqlDatabase::addDatabase("QSQLITE");
 	db.setDatabaseName(path);
 
 	if (!db.open()) {
-		log.error("Failed to connect at baseData");
-		return false;
+		log.error("Failed to connect at baseData,::Airline(...)");
+
 	}
 	else {
-		log.info("Connect to baseData seccessfull");
+		log.info("Connect to baseData seccessfully,::Airline(...)");
 
-		CreateTableBaseData();
-		InsertDataTable();
+		CreateTableBaseDataAirline();
+		InsertDataTableAirline();
 
-		return true;
 	}
 }
 
-void  AirlineDB::CreateTableBaseData() noexcept {
+void  AirlineDB::CreateTableBaseDataAirline() noexcept {
 	query = new QSqlQuery(db);
 
-	QString table = "CREATE TABLE AirlineDB ("
+	const QString table = "CREATE TABLE AirlineDB ("
 		"Name VARCHAR(20),"
 		"Telephone VARCHAR(20),"
 		"Address VARCHAR(20),"
@@ -72,13 +71,13 @@ AirlineDB* AirlineDB::getInstance() noexcept
 	return &instance;
 }
 
-auto AirlineDB::InsertDataTable() noexcept -> void {
-	QString name = ui->LineName->text();
-	QString telephone = ui->LineTelephone->text();
-	QString address = ui->LineAddress->text();
-	QString code = ui->LineCode->text();
+auto AirlineDB::InsertDataTableAirline() noexcept -> void {
+	const QString name = ui->LineName->text();
+	const QString telephone = ui->LineTelephone->text();
+	const QString address = ui->LineAddress->text();
+	const QString code = ui->LineCode->text();
 
-	QString insert = "INSERT INTO AirlineDB (name, telephone, address,code) "
+	const QString insert = "INSERT INTO AirlineDB (name, telephone, address,code) "
 		"VALUES (?, ?, ?, ?)";
 
 	model->select();
@@ -97,7 +96,7 @@ auto AirlineDB::InsertDataTable() noexcept -> void {
 	ClearLine();
 }
 
-void AirlineDB::DeleteBaseData()noexcept
+void AirlineDB::DeleteBaseDataAirline()noexcept
 {
 	const QString name_del = ui->LineName->text();
 	const QString delete_db = "DELETE FROM AirlineDB WHERE name=:name";
@@ -115,7 +114,7 @@ void AirlineDB::DeleteBaseData()noexcept
 	model->select();
 }
 
-auto AirlineDB::ChoiceUpdate()noexcept -> QString
+auto AirlineDB::ChoiceUpdateAirline()noexcept -> QString
 {
 	bool ok;
 	const QString text = QInputDialog::getText(this, tr("Input for update old name"),
@@ -126,9 +125,9 @@ auto AirlineDB::ChoiceUpdate()noexcept -> QString
 }
 
 
-void AirlineDB::UpdateBaseData()noexcept
+void AirlineDB::UpdateBaseDataAirline()noexcept
 {
-	const QString choice_update = ChoiceUpdate();
+	const QString choice_update = ChoiceUpdateAirline();
 	const QString choice_name = ui->LineName->text();
 
 	const QString update_db = "UPDATE AirlineDB SET name=:choice_update WHERE name=:choice_name";
@@ -147,7 +146,7 @@ void AirlineDB::UpdateBaseData()noexcept
 	model->select();
 }
 
-void AirlineDB::CloseBaseData() noexcept
+void AirlineDB::CloseBaseDataAirline() noexcept
 {
 	db.close();
 }

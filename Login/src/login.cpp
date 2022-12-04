@@ -10,14 +10,16 @@ Login::Login(QWidget* parent) :
 {
 	ui->setupUi(this);
 
-	connect(ui->btnLogin, SIGNAL(clicked(bool)), this, SLOT(DatabaseEntry()));
-	connect(ui->btnPassword, SIGNAL(clicked(bool)), this,
+	QObject::connect(ui->btnLogin, SIGNAL(clicked(bool)), this, SLOT(DatabaseEntry()));
+	QObject::connect(ui->btnPassword, SIGNAL(clicked(bool)), this,
 		SLOT(ChoiceViewPassword()));
 
-	Storage* st = new Storage;
+	m_st = new Storage;
 
-	QObject::connect(ui->ActChangePassword, &QAction::triggered, st, &Storage::ChangePassword);
+	QObject::connect(ui->ActChangePassword, &QAction::triggered, m_st, &Storage::ChangePassword);
 	QObject::connect(ui->actionClose, SIGNAL(triggered(bool)), qApp, SLOT(quit()));
+
+	delete m_st;
 }
 
 Login::~Login()
@@ -31,8 +33,25 @@ void Login::DatabaseEntry() noexcept {
 
 	if (CheckCorrectInput()) {
 		if (t_st->CorrectlyLogin(password, login)) {
-			t_db.Connect();
-			t_db.show();
+			int result = QInputDialog::getInt(this, tr("Choice one of need DataBase"),
+				tr("Enter: "));
+
+			switch (result) {
+			case 1:
+				t_db.ConnectAirline();
+				t_db.show();
+				break;
+
+			case 2:
+				p_db.ConnectPassengers();
+				p_db.show();
+				break;
+
+			default:
+				break;
+			}
+
+
 		}
 		else {
 			QMessageBox::information(this, "Failed", "Wrong enter login");
