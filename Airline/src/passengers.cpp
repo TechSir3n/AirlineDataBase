@@ -11,7 +11,12 @@ Passengers::Passengers(QWidget* parent) :
 	QObject::connect(ui->btnAdd, SIGNAL(clicked(bool)), this, SLOT(InsertBaseDataPassengers()));
 	QObject::connect(ui->btnDelete, SIGNAL(clicked(bool)), this, SLOT(DeleteBaseDataPassengers()));
 	QObject::connect(ui->btnUpdate, SIGNAL(clicked(bool)), this, SLOT(UpdateBaseDataPassengers()));
+	QObject::connect(ui->actionClearDataBase, SIGNAL(triggered(bool)), this, SLOT(ToEmptyPassengers()));
+
+
+	this->setWindowTitle("Passengers table");
 }
+
 Passengers::~Passengers()
 {
 	delete ui;
@@ -101,19 +106,19 @@ auto Passengers::ChoiceUpdatePassengers()noexcept -> QString
 
 void Passengers::UpdateBaseDataPassengers()
 {
-	const QString old_code = ChoiceUpdatePassengers();
-	const QString code_update = ui->LineCodePassenger->text();
-	const QString update = "UPDATE Passengfers SET=:code_update WHERE code=:old_code";
+	const QString update_old = ChoiceUpdatePassengers();
+	const QString old_code = ui->LineCodePassenger->text();
+	const QString update = "UPDATE Passengers SET code=:update_old WHERE code=:old_code";
 
 	query->prepare(update);
-	query->bindValue(":code", old_code);
-	query->bindValue(":code_update", code_update);
+	query->bindValue(":update_old", update_old);
+	query->bindValue(":old_code", old_code);
 
 	if (!query->exec()) {
 		log.error(query->lastError().text());
 	}
 	else {
-		log.info(old_code + " Success update on -> " + code_update);
+		log.info(update_old + " Success update on -> " + old_code);
 
 	}
 
@@ -132,13 +137,30 @@ void Passengers::DeleteBaseDataPassengers()
 		log.error(query->lastError().text());
 	}
 	else {
-		log.info(delete_code + " Removed successfully ");
+		log.info(delete_code + " Removed successfully");
 	}
 
 	model->select();
 }
 
-void Passengers::CloseBaseDataPassengers()
+bool  Passengers::CloseBaseDataPassengers()
 {
-	p_db.close();
+	if (p_db.isOpen()) {
+		p_db.close();
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool Passengers::ToEmptyPassengers()
+{
+	if (query->exec("DELETE FROM Passengers")) {
+		log.error(query->lastError().text());
+	}
+	else {
+		model->select();
+		return true;
+	}
 }

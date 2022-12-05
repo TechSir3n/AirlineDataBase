@@ -10,6 +10,9 @@ AirlineDB::AirlineDB(QWidget* parent)
 	QObject::connect(ui->btnClose, SIGNAL(clicked(bool)), this, SLOT(CloseBaseDataAirline()));
 	QObject::connect(ui->btnDelete, SIGNAL(clicked(bool)), this, SLOT(DeleteBaseDataAirline()));
 	QObject::connect(ui->btnUpdate, SIGNAL(clicked(bool)), this, SLOT(UpdateBaseDataAirline()));
+	QObject::connect(ui->actionClearAirline, SIGNAL(triggered(bool)), this, SLOT(ToEmptyAilrline()));
+
+	this->setWindowTitle("The Airline");
 }
 
 AirlineDB::~AirlineDB()
@@ -71,7 +74,7 @@ AirlineDB* AirlineDB::getInstance() noexcept
 	return &instance;
 }
 
-auto AirlineDB::InsertDataTableAirline() noexcept -> void {
+auto AirlineDB::InsertDataTableAirline() -> void {
 	const QString name = ui->LineName->text();
 	const QString telephone = ui->LineTelephone->text();
 	const QString address = ui->LineAddress->text();
@@ -96,7 +99,7 @@ auto AirlineDB::InsertDataTableAirline() noexcept -> void {
 	ClearLine();
 }
 
-void AirlineDB::DeleteBaseDataAirline()noexcept
+void AirlineDB::DeleteBaseDataAirline()
 {
 	const QString name_del = ui->LineName->text();
 	const QString delete_db = "DELETE FROM AirlineDB WHERE name=:name";
@@ -116,16 +119,15 @@ void AirlineDB::DeleteBaseDataAirline()noexcept
 
 auto AirlineDB::ChoiceUpdateAirline()noexcept -> QString
 {
-	bool ok;
 	const QString text = QInputDialog::getText(this, tr("Input for update old name"),
 		tr("Enter: "), QLineEdit::Normal,
-		QDir::home().dirName(), &ok);
+		QDir::home().dirName());
 
 	return text;
 }
 
 
-void AirlineDB::UpdateBaseDataAirline()noexcept
+void AirlineDB::UpdateBaseDataAirline()
 {
 	const QString choice_update = ChoiceUpdateAirline();
 	const QString choice_name = ui->LineName->text();
@@ -146,7 +148,25 @@ void AirlineDB::UpdateBaseDataAirline()noexcept
 	model->select();
 }
 
-void AirlineDB::CloseBaseDataAirline() noexcept
+bool AirlineDB::CloseBaseDataAirline()
 {
-	db.close();
+	if (db.isOpen()) {
+		db.close();
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool AirlineDB::ToEmptyAilrline()
+{
+	if (!query->exec("DELETE FROM AirlineDB")) {
+		log.error(query->lastError().text());
+		return false;
+	}
+	else {
+		model->select();
+		return true;
+	}
 }

@@ -30,7 +30,9 @@ public slots:
 
 	void DeleteBaseDataPassengers();
 
-	void CloseBaseDataPassengers();
+	bool CloseBaseDataPassengers();
+
+	bool ToEmptyPassengers();
 
 private:
 	Logger log;
