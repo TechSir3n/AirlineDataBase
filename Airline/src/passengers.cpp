@@ -12,6 +12,7 @@ Passengers::Passengers(QWidget* parent) :
 	QObject::connect(ui->btnDelete, SIGNAL(clicked(bool)), this, SLOT(DeleteBaseDataPassengers()));
 	QObject::connect(ui->btnUpdate, SIGNAL(clicked(bool)), this, SLOT(UpdateBaseDataPassengers()));
 	QObject::connect(ui->actionClearDataBase, SIGNAL(triggered(bool)), this, SLOT(ToEmptyPassengers()));
+	QObject::connect(ui->actionOrderBy, SIGNAL(triggered(bool)), this, SLOT(OrderByPassengers()));
 
 
 	this->setWindowTitle("Passengers table");
@@ -26,7 +27,7 @@ Passengers::~Passengers()
 
 auto Passengers::ConnectPassengers() -> void
 {
-	const QString path = "./PassengersDB.db";
+	const QString path = "./Passengern.db";
 	p_db = QSqlDatabase::addDatabase("QSQLITE");
 	p_db.setDatabaseName(path);
 
@@ -47,16 +48,16 @@ auto Passengers::CreateTableBaseDataPassengers()noexcept -> void
 		"Surname VARCHAR(15),"
 		"Fatherland VARCHAR(15),"
 		"Passport VARCHAR(20),"
-		"Birth_date DATE,"
+		"Birth DATE,"
 		"Gender VARCHAR(10),"
-		"Code Passenger SMALLINT UNSIGNED);";
+		"Code SMALLINT UNSIGNED);";
 
 
 	query = new QSqlQuery(p_db);
 	query->prepare(table);
 
 	if (!query->exec()) {
-		log.error(query->lastError().text());
+		log.error(query->lastError().text() + " ::CreateTablePassengers(...)");
 	}
 
 	model = new QSqlTableModel(this);
@@ -76,7 +77,7 @@ void Passengers::InsertBaseDataPassengers()
 	const QString gender = ui->LineGender->text();
 	const QString code = ui->LineCodePassenger->text();
 
-	const QString insert = "INSERT INTO Passengers (name,surname,fatherland,passport,birth_date,gender,code) "
+	const QString insert = "INSERT INTO Passengers (name,surname,fatherland,passport,birth,gender,code) "
 		"VALUES (?, ?, ?, ?, ?, ?, ?)";
 	model->select();
 
@@ -91,7 +92,7 @@ void Passengers::InsertBaseDataPassengers()
 		query->exec();
 	}
 	else {
-		log.error(query->lastError().text());
+		log.error(query->lastError().text() + " ::InsertPassengers(...)");
 	}
 }
 
@@ -115,7 +116,7 @@ void Passengers::UpdateBaseDataPassengers()
 	query->bindValue(":old_code", old_code);
 
 	if (!query->exec()) {
-		log.error(query->lastError().text());
+		log.error(query->lastError().text() + " ::UpdatePassengers(...)");
 	}
 	else {
 		log.info(update_old + " Success update on -> " + old_code);
@@ -134,7 +135,7 @@ void Passengers::DeleteBaseDataPassengers()
 	query->bindValue(":code", delete_code);
 
 	if (!query->exec()) {
-		log.error(query->lastError().text());
+		log.error(query->lastError().text() + " ::DeletePassengers(...)");
 	}
 	else {
 		log.info(delete_code + " Removed successfully");
@@ -147,6 +148,7 @@ bool  Passengers::CloseBaseDataPassengers()
 {
 	if (p_db.isOpen()) {
 		p_db.close();
+		QSqlDatabase::removeDatabase("Passengers");
 		return true;
 	}
 	else {
@@ -154,13 +156,27 @@ bool  Passengers::CloseBaseDataPassengers()
 	}
 }
 
-bool Passengers::ToEmptyPassengers()
+bool Passengers::OrderByPassengers()
 {
-	if (query->exec("DELETE FROM Passengers")) {
-		log.error(query->lastError().text());
+	if (query->exec("SELECT * FROM Passengers ORDER BY Code DESC, Name ASC")) {
+		log.error(query->lastError().text() + " ::OrderByPassengers(...)");
+		return false;
 	}
 	else {
 		model->select();
 		return true;
 	}
+}
+
+bool Passengers::ToEmptyPassengers()
+{
+	if (query->exec("DELETE FROM Passengers")) {
+		log.error(query->lastError().text() + " ::ToEmptyPassengers(...)");
+		return false;
+	}
+	else {
+		model->select();
+		return true;
+	}
+
 }

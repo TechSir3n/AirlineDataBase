@@ -54,11 +54,11 @@ void Login::DatabaseEntry() noexcept {
 
 		}
 		else {
-			QMessageBox::information(this, "Failed", "Wrong enter login");
+			QMessageBox::warning(this, "The Error", "Authorisation Error");
 		}
 	}
 	else {
-		QMessageBox::warning(this, "Failed to login", "User enter wrong data");
+		QMessageBox::warning(this, "The Error", "Login or password entered incorrectly");
 	}
 }
 

@@ -34,6 +34,8 @@ public slots:
 
 	bool ToEmptyPassengers();
 
+	bool OrderByPassengers();
+
 private:
 	Logger log;
 	QSqlDatabase p_db;

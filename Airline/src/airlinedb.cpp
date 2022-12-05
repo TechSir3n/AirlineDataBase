@@ -11,6 +11,7 @@ AirlineDB::AirlineDB(QWidget* parent)
 	QObject::connect(ui->btnDelete, SIGNAL(clicked(bool)), this, SLOT(DeleteBaseDataAirline()));
 	QObject::connect(ui->btnUpdate, SIGNAL(clicked(bool)), this, SLOT(UpdateBaseDataAirline()));
 	QObject::connect(ui->actionClearAirline, SIGNAL(triggered(bool)), this, SLOT(ToEmptyAilrline()));
+	QObject::connect(ui->actionOrderBy, SIGNAL(triggered(bool)), this, SLOT(OrderByAirline()));
 
 	this->setWindowTitle("The Airline");
 }
@@ -31,8 +32,8 @@ auto AirlineDB::ClearLine()noexcept -> void
 }
 
 auto AirlineDB::ConnectAirline() -> void {
-	const QString path = "./Airline.db";
-	db = QSqlDatabase::addDatabase("QSQLITE");
+	const QString path = "./AirlineDB.db";
+	db = QSqlDatabase::addDatabase("QSQLITE", "ConnectionAR");
 	db.setDatabaseName(path);
 
 	if (!db.open()) {
@@ -53,12 +54,12 @@ void  AirlineDB::CreateTableBaseDataAirline() noexcept {
 
 	const QString table = "CREATE TABLE AirlineDB ("
 		"Name VARCHAR(20),"
-		"Telephone VARCHAR(20),"
+		"Telephone VARCHAR(7),"
 		"Address VARCHAR(20),"
 		"Code INTEGER PRIMARY KEY NOT NULL);";
 
 	if (!query->exec(table)) {
-		log.error(query->lastError().text());
+		log.error(query->lastError().text() + " ::CreateAirline(...)");
 	}
 
 	model = new QSqlTableModel(this, db);
@@ -93,7 +94,7 @@ auto AirlineDB::InsertDataTableAirline() -> void {
 		query->exec();
 	}
 	else {
-		log.error(query->lastError().text());
+		log.error(query->lastError().text() + " ::InsertAirline(...)");
 	}
 
 	ClearLine();
@@ -108,7 +109,7 @@ void AirlineDB::DeleteBaseDataAirline()
 	query->bindValue(":name", name_del);
 
 	if (!query->exec()) {
-		log.error(query->lastError().text());
+		log.error(query->lastError().text() + "::DeleteAirine(...)");
 	}
 	else {
 		log.info(name_del + " removed successfully ! ");
@@ -139,7 +140,7 @@ void AirlineDB::UpdateBaseDataAirline()
 	query->bindValue(":choice_name", choice_name);
 
 	if (!query->exec()) {
-		log.error(query->lastError().text());
+		log.error(query->lastError().text() + "::UpdateAirline(...)");
 	}
 	else {
 		log.info(choice_name + " update successfully on " + choice_update);
@@ -152,6 +153,7 @@ bool AirlineDB::CloseBaseDataAirline()
 {
 	if (db.isOpen()) {
 		db.close();
+		QSqlDatabase::removeDatabase("AirlineDB");
 		return true;
 	}
 	else {
@@ -159,10 +161,22 @@ bool AirlineDB::CloseBaseDataAirline()
 	}
 }
 
+bool AirlineDB::OrderByAirline()
+{
+	if (!query->exec("SELECT * FROM AirlineDB ORDER BY Codef DESC,Name ASC")) {
+		log.error(query->lastError().text() + " ::OrderByAirline(...)");
+		return false;
+	}
+	else {
+		model->select();
+		return true;
+	}
+}
+
 bool AirlineDB::ToEmptyAilrline()
 {
 	if (!query->exec("DELETE FROM AirlineDB")) {
-		log.error(query->lastError().text());
+		log.error(query->lastError().text() + " ::ToEmptyAirline(...)");
 		return false;
 	}
 	else {

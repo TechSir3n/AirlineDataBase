@@ -41,6 +41,8 @@ public slots:
 
 	bool ToEmptyAilrline();
 
+	bool OrderByAirline();
+
 	void InsertDataTableAirline();
 
 	void DeleteBaseDataAirline();
