@@ -1,48 +1,47 @@
 #ifndef PASSENGERS_H
 #define PASSENGERS_H
 
-#include <QMainWindow>
 #include "airlinedb.h"
+#include <QMainWindow>
 
 namespace Ui {
 class Passengers;
 }
 
-class Passengers : public QMainWindow
-{
-    Q_OBJECT
+class Passengers : public QMainWindow {
+  Q_OBJECT
 
 public:
-    explicit Passengers(QWidget *parent = nullptr);
-    ~Passengers();
+  explicit Passengers(QWidget *parent = nullptr);
+  ~Passengers();
 
 public:
-    auto CreateTableBaseDataPassengers()noexcept -> void;
+  auto CreateTableBaseDataPassengers() noexcept -> void;
 
-    auto ConnectPassengers() -> void;
+  auto ConnectPassengers() -> void;
 
-    auto ChoiceUpdatePassengers()noexcept -> QString;
+  auto ChoiceUpdatePassengers() noexcept -> QString;
 
-    auto ClearLine()noexcept -> void;
+  auto ClearLine() noexcept -> void;
 
 public slots:
-    void InsertBaseDataPassengers();
+  void InsertBaseDataPassengers();
 
-    void UpdateBaseDataPassengers();
+  void UpdateBaseDataPassengers();
 
-    void DeleteBaseDataPassengers();
+  void DeleteBaseDataPassengers();
 
-    bool CloseBaseDataPassengers();
+  bool CloseBaseDataPassengers();
 
-    bool ToEmptyPassengers();
+  bool ToEmptyPassengers();
 
-    bool OrderByPassengers();
+  bool OrderByPassengers();
 
 private:
-    Logger log;
-    QSqlDatabase p_db;
-    QSqlTableModel *model;
-    Ui::Passengers *ui;
+  Logger log;
+  QSqlDatabase p_db;
+  QSqlTableModel *model;
+  Ui::Passengers *ui;
 };
 
 #endif // PASSENGERS_H

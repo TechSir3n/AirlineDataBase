@@ -10,39 +10,40 @@ namespace Ui {
 class Flights;
 }
 
-class Flights : public QMainWindow
-{
-    Q_OBJECT
+class Flights : public QMainWindow {
+  Q_OBJECT
 
 public:
-    explicit Flights(QWidget *parent = nullptr);
-    ~Flights();
+  explicit Flights(QWidget *parent = nullptr);
+  ~Flights();
 
 public:
-   auto ConnectFlights()noexcept -> void;
+  auto ConnectFlights() noexcept -> void;
 
-   auto CreateTableFlights()noexcept ->void;
+  auto CreateTableFlights() noexcept -> void;
 
-   auto ClearLine()noexcept -> void;
+  auto ClearLine() noexcept -> void;
 
-   auto ChoiceUpdate() noexcept -> QString;
+  auto ChoiceUpdate() noexcept -> QString;
 
- public slots:
-   void InsertTableFlights();
+public slots:
+  void InsertTableFlights();
 
-   void DeleteTableFlights();
+  void DeleteTableFlights();
 
-   void UpdateTableFlights();
+  void UpdateTableFlights();
 
-   bool ToEmptyFlights();
+  bool ToEmptyFlights();
 
-   bool CloseDateBaseFlights();
+  bool CloseDateBaseFlights();
 
- private:
-   QSqlDatabase f_db;
-   Logger log;
-   QSqlTableModel *model;
-   Ui::Flights *ui;
+  bool OrderByFlights();
+
+private:
+  QSqlDatabase f_db;
+  Logger log;
+  QSqlTableModel *model;
+  Ui::Flights *ui;
 };
 
 #endif // FLIGHTS_H

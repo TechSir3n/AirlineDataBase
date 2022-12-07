@@ -28,15 +28,14 @@ Passengers::~Passengers() {
   delete model;
 }
 
-auto Passengers::ClearLine()noexcept -> void
-{
-    ui->LineCodePassenger->clear();\
-    ui->LineDateOfBirth->clear();
-    ui->LineFatherland->clear();
-    ui->LineGender->clear();
-    ui->LineName->clear();
-    ui->LinePassport->clear();
-    ui->LineSurname->clear();
+auto Passengers::ClearLine() noexcept -> void {
+  ui->LineCodePassenger->clear();
+  ui->LineDateOfBirth->clear();
+  ui->LineFatherland->clear();
+  ui->LineGender->clear();
+  ui->LineName->clear();
+  ui->LinePassport->clear();
+  ui->LineSurname->clear();
 }
 
 auto Passengers::ConnectPassengers() -> void {
@@ -45,7 +44,7 @@ auto Passengers::ConnectPassengers() -> void {
   p_db.setDatabaseName(path);
 
   if (!p_db.open()) {
-    log.error(QString::number(p_db.isOpenError()));
+    log.error("Cannot open dataBase" + p_db.lastError().text());
   } else {
     log.info("Connect to DataBase successfully,::Passengers(...)");
     CreateTableBaseDataPassengers();
@@ -62,9 +61,7 @@ auto Passengers::CreateTableBaseDataPassengers() noexcept -> void {
                         "Gender VARCHAR(5),"
                         "Code SMALLINT UNSIGNED);";
 
-
   QSqlQuery query(p_db);
-
 
   if (!query.exec(table)) {
     log.error(query.lastError().text() + " ::CreateTablePassengers(...)");
@@ -121,7 +118,13 @@ void Passengers::UpdateBaseDataPassengers() {
   const QString update =
       "UPDATE Passengers SET code=:update_old WHERE code=:old_code";
 
+  if (ui->LineCodePassenger->text().isEmpty()) {
+    QMessageBox::warning(this, "The Error",
+                         "You did not enter a name that you have updated");
+  }
+
   QSqlQuery query(p_db);
+
   query.prepare(update);
   query.bindValue(":update_old", update_old);
   query.bindValue(":old_code", old_code);
@@ -140,6 +143,11 @@ void Passengers::UpdateBaseDataPassengers() {
 void Passengers::DeleteBaseDataPassengers() {
   const QString delete_code = ui->LineCodePassenger->text();
   const QString delete_tb = "DELETE FROM Passengers WHERE code=:code";
+
+  if (ui->LineCodePassenger->text().isEmpty()) {
+    QMessageBox::warning(this, "The Error",
+                         "You did not enter code that you have delete");
+  }
 
   QSqlQuery query(p_db);
   query.prepare(delete_tb);
@@ -180,8 +188,7 @@ bool Passengers::OrderByPassengers() {
 
 bool Passengers::ToEmptyPassengers() {
 
-
-   QSqlQuery query(p_db);
+  QSqlQuery query(p_db);
   if (query.exec("DROP FROM Passengers")) {
     log.error(query.lastError().text() + " ::ToEmptyPassengers(...)");
     return false;

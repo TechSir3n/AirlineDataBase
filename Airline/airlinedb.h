@@ -2,14 +2,14 @@
 #define AIRLINEDB_H
 
 #include "logger.h"
+#include <QDir>
+#include <QInputDialog>
 #include <QMainWindow>
+#include <QMessageBox>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QInputDialog>
-#include <QDir>
 #include <QSqlTableModel>
-#include <QMessageBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -29,25 +29,25 @@ public:
 
   auto CreateTableBaseDataAirline() noexcept -> void;
 
-  auto ChoiceUpdateAirline()noexcept -> QString;
+  auto ChoiceUpdateAirline() noexcept -> QString;
 
-  auto ClearLine()noexcept -> void;
+  auto ClearLine() noexcept -> void;
 
 public:
-  static AirlineDB *getInstance()noexcept;
+  static AirlineDB *getInstance() noexcept;
 
 public slots:
-    bool CloseBaseDataAirline();
+  bool CloseBaseDataAirline();
 
-    bool ToEmptyAilrline();
+  bool ToEmptyAilrline();
 
-    bool OrderByAirline();
+  bool OrderByAirline();
 
-    void InsertDataTableAirline();
+  void InsertDataTableAirline();
 
-    void DeleteBaseDataAirline();
+  void DeleteBaseDataAirline();
 
-    void UpdateBaseDataAirline();
+  void UpdateBaseDataAirline();
 
 private:
   QSqlDatabase db;
