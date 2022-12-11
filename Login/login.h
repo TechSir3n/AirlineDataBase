@@ -6,6 +6,7 @@
 #include "passengers.h"
 #include "storage.h"
 #include "tickets.h"
+#include "airlineservices.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -40,6 +41,7 @@ private:
   Passengers p_db;
   Flights f_db;
   Tickets ts_db;
+  AirlineServices sr_arl;
 
 private:
   Ui::Login *ui;

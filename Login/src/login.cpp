@@ -30,7 +30,7 @@ void Login::DatabaseEntry() noexcept {
 
   if (CheckCorrectInput()) {
     if (t_st->CorrectlyLogin(password, login)) {
-      int result = QInputDialog::getInt(this, tr("Choice one of need Table"),
+      int result = QInputDialog::getInt(this, tr("Choice one of need case"),
                                         tr("Enter: "));
 
       switch (result) {
@@ -53,6 +53,11 @@ void Login::DatabaseEntry() noexcept {
         ts_db.ConnectTickets();
         ts_db.show();
         break;
+
+      case 5:
+        //  sr_arl.HelpMenu();
+          sr_arl.show();
+          break;
 
       default:
         break;
